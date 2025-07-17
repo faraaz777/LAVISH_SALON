@@ -1,0 +1,16 @@
+
+.miniver-regular {
+  font-family: "Miniver", cursive;
+  font-weight: 600;
+  font-style: normal;
+  text-shadow: 3px 3px  rgba(0, 0, 0, 0.2);
+  color: aliceblue;
+}
+
+
+
+
+.App {
+  text-align: center;
+}
+
