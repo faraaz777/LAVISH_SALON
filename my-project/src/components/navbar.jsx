@@ -1,89 +1,68 @@
-import { useState } from 'react';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-  Box,
-  useMediaQuery
-} from '@mui/material';
-import { Menu, X } from 'lucide-react';
-import { useTheme } from '@mui/material/styles';
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
 
-function NavBar() {
+export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
-  const theme = useTheme();
-  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
 
-  const navItems = ['HOME', 'ABOUT', 'SERVICES', 'STAFF', 'TESTIMONIALS'];
+  const navItems = ["HOME", "ABOUT", "SERVICES", "STAFF", "TESTIMONIALS"];
 
   return (
-    <>
-      <AppBar position="static" sx={{ backgroundColor: 'black' }}>
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-          {/* Logo */}
-          <Typography variant="h5" sx={{ fontFamily: 'Miniver, cursive' }}>
-            LAVISH.
-          </Typography>
+    <nav className="fixed top-0 left-0 w-full bg-black text-white shadow-lg z-50">
+      <div className=" mx-auto flex justify-between items-center px-6 py-4">
+        {/* Logo */}
+        <h1 className="text-2xl font-bold font-[Miniver]">LAVISH.</h1>
 
-          {isDesktop ? (
-            <>
-              <Box sx={{ display: 'flex', gap: 4 }}>
-                {navItems.map((item) => (
-                  <Typography key={item} variant="body1">
-                    {item}
-                  </Typography>
-                ))}
-              </Box>
-              <Typography variant="body1">BOOK NOW</Typography>
-            </>
-          ) : (
-            <IconButton
-              edge="end"
-              color="inherit"
-              onClick={() => setIsOpen(!isOpen)}
+        {/* Desktop Menu */}
+        <div className="hidden md:flex flex-1 justify-center gap-8">
+          {navItems.map((item) => (
+            <a
+              key={item}
+              href={`#${item.toLowerCase()}`}
+              className="hover:text-gray-300 transition"
             >
-              {isOpen ? <X size={28} /> : <Menu size={28} />}
-            </IconButton>
-          )}
-        </Toolbar>
-      </AppBar>
+              {item}
+            </a>
+          ))}
+        </div>
 
-      <Drawer
-        anchor="top"
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        sx={{ display: { md: 'none' } }}
-      >
-        <Box
-          sx={{
-            backgroundColor: 'black',
-            color: 'white',
-            px: 3,
-            py: 2,
-          }}
-        >
-          <List>
-            {navItems.map((item) => (
-              <ListItem button key={item}>
-                <ListItemText primary={item} />
-              </ListItem>
-            ))}
-            <ListItem>
-              <ListItemText
-                primary="BOOK NOW"
-                primaryTypographyProps={{ fontWeight: 'bold' }}
-              />
-            </ListItem>
-          </List>
-        </Box>
-      </Drawer>
-    </>
+        {/* Book Now Button */}
+        <div className="hidden md:block">
+          <a
+            href="/booking"
+            className="bg-white text-black px-4 py-2 rounded hover:bg-gray-200 transition"
+          >
+            BOOK NOW
+          </a>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      {isOpen && (
+        <div className="md:hidden bg-black text-white px-6 py-4">
+          {navItems.map((item) => (
+            <a
+              key={item}
+              href={`#${item.toLowerCase()}`}
+              className="block py-2 hover:text-gray-300 transition"
+              onClick={() => setIsOpen(false)}
+            >
+              {item}
+            </a>
+          ))}
+          <a
+            href="/booking"
+            className="block py-2 font-bold hover:text-gray-300 transition"
+            onClick={() => setIsOpen(false)}
+          >
+            BOOK NOW
+          </a>
+        </div>
+      )}
+    </nav>
   );
 }
-
-export default NavBar;
