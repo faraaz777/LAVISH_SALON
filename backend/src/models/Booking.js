@@ -9,13 +9,11 @@ phone: { type: String, required: true },
 
 
 service: { type: String, required: true },
-price: { type: Number, required: true }, // in INR
+price: { type: Number, required: true },
 
 
-date: { type: String, required: true }, // YYYY-MM-DD
-timeSlot: { type: String, required: true }, // e.g. "10:00 AM - 11:00 AM"
-
-
+date: { type: String, required: true }, 
+timeSlot: { type: String, required: true }, 
 status: { type: String, enum: ['created', 'paid', 'failed', 'refunded'], default: 'created' },
 
 

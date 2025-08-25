@@ -1,4 +1,4 @@
-import img from "../assesst/hrimg.jpg";
+import img from "../assets/hrimg.jpg";
 
 export default function Hero() {
   return (

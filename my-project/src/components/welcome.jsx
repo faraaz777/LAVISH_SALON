@@ -1,6 +1,6 @@
 import React from "react";
 
-import welimg from "../assesst/welimg.jpg";
+import welimg from "../assets/welimg.jpg";
 export default function Welcome() {
   return (
     <section

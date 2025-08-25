@@ -1,6 +1,6 @@
-import img1 from "../assesst/style1.png";
-import img2 from "../assesst/style2.png";
-import img3 from "../assesst/style3.png";
+import img1 from "../assets/style1.png";
+import img2 from "../assets/style2.png";
+import img3 from "../assets/style3.png";
 
 const stylists = [
   { name: "SOPHIA MONROE", role: "COLOURIST", image: img1 },
