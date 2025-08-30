@@ -35,7 +35,7 @@ const redirectToHome = () => {
     e.preventDefault();
 
     // Step 1: Create order on backend
-    const res = await fetch("http://localhost:8000/api/bookings/create-order", {
+    const res = await fetch("/api/bookings/create-order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -72,11 +72,12 @@ const redirectToHome = () => {
       handler: async function (response) {
         // Step 3: Verify payment on backend
         const verifyRes = await fetch(
-          "http://localhost:8000/api/bookings/verify-payment",
+          "/api/payments/verify",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
+              bookingId: data.bookingId,
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
