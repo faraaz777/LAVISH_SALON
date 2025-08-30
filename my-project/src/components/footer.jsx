@@ -34,9 +34,9 @@ function Footer() {
         <div>
           <h4 className="font-bold mb-2">Contact Info</h4>
           <p>🕒 Mon–Sat 9:00 AM – 10:00 PM</p>
-          <p>📞 +91-9876543217</p>
+          <p>📞 +91-123456789</p>
           <p>📍 Mehdipatnam, Hyderabad</p>
-          <p>📧 enrichsalon@gmail.com</p>
+          <p>📧 lavishsalon@gmail.com</p>
         </div>
       </div>
       <div className="mt-6 text-center text-sm text-gray-400">
