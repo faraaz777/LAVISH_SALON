@@ -17,7 +17,7 @@ export default function Hero() {
           <p className="mt-4 text-lg md:text-xl">
             CHANGE YOUR LOOK WITH OUR TALENTED STYLISTS.
           </p>
-          <a href="/book" className="mt-6">
+          <a href="/booking" className="mt-6">
             <button className="px-6 py-3 bg-pink-600 hover:bg-pink-700 text-white rounded-full">
               BOOK A SEAT
             </button>

@@ -10,11 +10,7 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-/**
- * POST /api/bookings/create-order
- * Body: { name, email, phone, service, date, time }
- * Calculates price server-side, creates a Razorpay order, stores a pending booking, returns order + key.
- */
+
 router.post('/create-order', async (req, res) => {
   try {
     const { name, email, phone, service, date, time } = req.body;
@@ -29,7 +25,6 @@ router.post('/create-order', async (req, res) => {
 
     const amountPaise = priceInInr * 100; // INR -> paise
 
-    // Create Razorpay order
     const order = await razorpay.orders.create({
       amount: amountPaise,
       currency: 'INR',
@@ -37,7 +32,6 @@ router.post('/create-order', async (req, res) => {
       notes: { name, email, phone, service, date, time },
     });
 
-    // Save booking as created
     const booking = await Booking.create({
       name,
       email,
@@ -64,4 +58,4 @@ router.post('/create-order', async (req, res) => {
   }
 });
 
-module.exports = router;  // ✅ must be outside route
+module.exports = router; 

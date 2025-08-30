@@ -13,11 +13,7 @@ key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
 
-/**
-* POST /api/payments/verify
-* Body: { bookingId, razorpay_order_id, razorpay_payment_id, razorpay_signature }
-* Used after Razorpay Checkout success on frontend.
-*/
+
 router.post('/verify', async (req, res) => {
 try {
 const { bookingId, razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
@@ -52,10 +48,7 @@ res.status(500).json({ message: 'Server error', error: err.message });
 });
 
 
-/**
-* (Optional) Webhook endpoint: set RAW body parser just for this route in server.js if you enable.
-* POST /api/payments/webhook
-*/
+
 router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
 try {
 const signature = req.headers['x-razorpay-signature'];
@@ -67,7 +60,6 @@ if (!ok) return res.status(400).send('Invalid webhook signature');
 
 
 const event = JSON.parse(rawBody.toString());
-// You can handle the event here if needed
 
 res.status(200).json({ received: true });
 } catch (err) {
