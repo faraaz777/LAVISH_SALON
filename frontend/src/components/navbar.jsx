@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { Link } from "react-router";
 
 export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,12 +28,12 @@ export default function NavBar() {
 
         {/* Book Now Button */}
         <div className="hidden md:block">
-          <a
-            href="/booking"
+          <Link
+            to="/booking"
             className="bg-white text-black px-4 py-2 rounded hover:bg-gray-200 transition"
           >
             BOOK NOW
-          </a>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -54,13 +55,13 @@ export default function NavBar() {
               {item}
             </a>
           ))}
-          <a
-            href="/booking"
+          <Link
+            to="/booking"
             className="block py-2 font-bold hover:text-gray-300 transition"
             onClick={() => setIsOpen(false)}
           >
             BOOK NOW
-          </a>
+          </Link>
         </div>
       )}
     </nav>
