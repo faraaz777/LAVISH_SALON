@@ -7,7 +7,7 @@ const app = express();
 dotenv.config();
 
 app.use(cors({
-  origin: 'https://lavish-salon.vercel.app/',
+  origin: 'https://lavish-salon.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 
