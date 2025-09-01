@@ -48,7 +48,7 @@ export default function SalonBooking() {
     e.preventDefault();
 
     // Create order on backend
-    const res = await fetch("http://localhost:8000/api/bookings/create-order", {
+    const res = await fetch("https://lavish-salon.onrender.com/api/bookings/create-order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -84,7 +84,7 @@ export default function SalonBooking() {
       theme: { color: "#3399cc" },
       handler: async function (response) {
         // Verify payment on backend
-        const verifyRes = await fetch("http://localhost:8000/api/payments/verify", {
+        const verifyRes = await fetch("https://lavish-salon.onrender.com/api/payments/verify", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

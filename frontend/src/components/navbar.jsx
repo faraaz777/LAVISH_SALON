@@ -10,10 +10,10 @@ export default function NavBar() {
   return (
     <nav className="fixed top-0 left-0 w-full bg-black text-white shadow-lg z-50">
       <div className=" mx-auto flex justify-between items-center px-6 py-4">
-        {/* Logo */}
+        <a href ="/">
         <h1 className="text-2xl font-bold font-[Miniver]">LAVISH.</h1>
+        </a>
 
-        {/* Desktop Menu */}
         <div className="hidden md:flex flex-1 justify-center gap-8">
           {navItems.map((item) => (
             <a
@@ -26,7 +26,6 @@ export default function NavBar() {
           ))}
         </div>
 
-        {/* Book Now Button */}
         <div className="hidden md:block">
           <Link
             to="/booking"
@@ -36,7 +35,6 @@ export default function NavBar() {
           </Link>
         </div>
 
-        {/* Mobile Menu Button */}
         <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
