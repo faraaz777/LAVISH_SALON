@@ -1,7 +1,20 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import bookingimg from "../assets/booking.png";
 
 export default function SalonBooking() {
+  const fillDemoData = () => {
+  
+    setFormData({
+      name: "Ahmed",
+      email: "ahmed@example.com",
+      phone: "1234567789",
+      service: "Haircut",
+      date: new Date().toISOString().split("T")[0],
+      time: "11:00 AM - 12:00 PM",
+      price: services["Haircut"],
+    });
+  };
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -19,7 +32,7 @@ export default function SalonBooking() {
     Manicure: 400,
     Pedicure: 450,
   };
-const redirectToHome = () => {
+  const redirectToHome = () => {
     window.location.href = "/";
   };
   const handleChange = (e) => {
@@ -34,8 +47,8 @@ const redirectToHome = () => {
   const handlePayment = async (e) => {
     e.preventDefault();
 
-    // Step 1: Create order on backend
-    const res = await fetch("/api/bookings/create-order", {
+    // Create order on backend
+    const res = await fetch("http://localhost:8000/api/bookings/create-order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -55,7 +68,7 @@ const redirectToHome = () => {
       return;
     }
 
-    // Step 2: Razorpay options
+    // Razorpay options
     const options = {
       key: data.key,
       amount: data.amount,
@@ -68,22 +81,19 @@ const redirectToHome = () => {
         email: formData.email,
         contact: formData.phone,
       },
-      theme: { color: "#ff4081" },
+      theme: { color: "#3399cc" },
       handler: async function (response) {
-        // Step 3: Verify payment on backend
-        const verifyRes = await fetch(
-          "/api/payments/verify",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              bookingId: data.bookingId,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-            }),
-          }
-        );
+        // Verify payment on backend
+        const verifyRes = await fetch("http://localhost:8000/api/payments/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            bookingId: data.bookingId,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+          }),
+        });
 
         const verifyData = await verifyRes.json();
 
@@ -91,15 +101,15 @@ const redirectToHome = () => {
           alert(
             `✅ Payment Verified!\nBooking Confirmed for ${formData.name}\nService: ${formData.service}\nTime: ${formData.time}\nAmount: ₹${formData.price}\nPayment ID: ${response.razorpay_payment_id}`
           );
-          // Redirect to home page
-          window.location.href = "/";
+redirectToHome();
+
         } else {
           alert("⚠️ Payment verification failed. Please contact support.");
         }
       },
     };
 
-    // Step 4: Open Razorpay
+    // open Razorpay
     const rzp = new window.Razorpay(options);
     rzp.open();
   };
@@ -119,7 +129,6 @@ const redirectToHome = () => {
 
   return (
     <section className="min-h-screen flex">
-      {/* Image section */}
       <div className="w-1/3 hidden md:block">
         <img
           src={bookingimg}
@@ -128,10 +137,13 @@ const redirectToHome = () => {
         />
       </div>
 
-      {/* Form section */}
       <div className="w-2/3 flex items-center justify-center  ">
-        <button className="w-10 h-10 border-2 border-gray-300 flex justify-center items-center rounded-full absolute top-4 left-1/3 mx-5 "
-        onClick={() => {  redirectToHome() }}>
+        <button
+          className="w-10 h-10 border-2 border-gray-300 flex justify-center items-center rounded-full absolute top-4 left-1/3 mx-5 "
+          onClick={() => {
+            redirectToHome();
+          }}
+        >
           {"X"}
         </button>
         <div className="bg-white shadow-lg rounded-xl p-8 w-7/12">
@@ -143,35 +155,38 @@ const redirectToHome = () => {
             <input
               type="text"
               name="name"
+              value={formData.name}
               placeholder="Your Name"
               onChange={handleChange}
               required
               className="w-full p-2 border rounded-lg"
-            />
+              />
             <input
               type="email"
               name="email"
+              value={formData.email}
               placeholder="Your Email"
               onChange={handleChange}
               required
               className="w-full p-2 border rounded-lg"
-            />
+              />
             <input
               type="tel"
               name="phone"
+              value={formData.phone}
               placeholder="Your Phone"
               onChange={handleChange}
               required
               className="w-full p-2 border rounded-lg"
-            />
+              />
 
-            {/* Service selection */}
             <select
               name="service"
+              value={formData.service}
               onChange={handleChange}
               required
               className="w-full p-2 border rounded-lg"
-            >
+              >
               <option value="">Select Service</option>
               {Object.keys(services).map((service, idx) => (
                 <option key={idx} value={service}>
@@ -180,25 +195,20 @@ const redirectToHome = () => {
               ))}
             </select>
 
-            {/* Price display */}
-            {formData.price > 0 && (
-              <div className="p-3 bg-gray-100 rounded-lg text-center font-semibold">
-                Price: ₹{formData.price}
-              </div>
-            )}
-
             <input
               type="date"
               name="date"
+              value={formData.date}
               onChange={handleChange}
               required
               className="w-full p-2 border rounded-lg"
-            />
+              />
 
             <select
               name="time"
               onChange={handleChange}
               required
+              value={formData.time}
               className="w-full p-2 border rounded-lg"
             >
               <option value="">Select Time Slot</option>
@@ -211,13 +221,24 @@ const redirectToHome = () => {
 
             <button
               type="submit"
-              className="w-full bg-stone-950 text-white py-2 rounded-lg font-semibold hover:bg-slate-700 transition"
+              className="w-1/2 bg-stone-950 text-white py-2  rounded-lg font-semibold hover:bg-slate-700 transition"
               disabled={formData.price === 0}
             >
               Book & Pay ₹{formData.price || ""}
             </button>
+              <button
+              type="button"
+              onClick={fillDemoData}
+              className="w-1/2 bg-pink-500 text-white px-4  font-semibold py-2 rounded-lg hover:bg-pink-600 transition"
+            >
+              Demo
+            </button>
           </form>
+       
+
         </div>
+
+
       </div>
     </section>
   );
