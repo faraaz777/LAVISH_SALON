@@ -1,20 +1,7 @@
-import  { useState } from "react";
+import { useState } from "react";
 import bookingimg from "../assets/booking.png";
 
 export default function SalonBooking() {
-  const fillDemoData = () => {
-  
-    setFormData({
-      name: "Ahmed",
-      email: "ahmed@example.com",
-      phone: "1234567789",
-      service: "Haircut",
-      date: new Date().toISOString().split("T")[0],
-      time: "11:00 AM - 12:00 PM",
-      price: services["Haircut"],
-    });
-  };
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -32,9 +19,23 @@ export default function SalonBooking() {
     Manicure: 400,
     Pedicure: 450,
   };
+
+  const fillDemoData = () => {
+    setFormData({
+      name: "Ahmed",
+      email: "ahmed@example.com",
+      phone: "1234567789",
+      service: "Haircut",
+      date: new Date().toISOString().split("T")[0],
+      time: "11:00 AM - 12:00 PM",
+      price: services["Haircut"],
+    });
+  };
+
   const redirectToHome = () => {
     window.location.href = "/";
   };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "service") {
@@ -47,19 +48,21 @@ export default function SalonBooking() {
   const handlePayment = async (e) => {
     e.preventDefault();
 
-    // Create order on backend
-    const res = await fetch("https://lavish-salon.onrender.com/api/bookings/create-order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        service: formData.service,
-        date: formData.date,
-        time: formData.time,
-      }),
-    });
+    const res = await fetch(
+      "https://lavish-salon.onrender.com/api/bookings/create-order",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          service: formData.service,
+          date: formData.date,
+          time: formData.time,
+        }),
+      }
+    );
 
     const data = await res.json();
 
@@ -68,7 +71,6 @@ export default function SalonBooking() {
       return;
     }
 
-    // Razorpay options
     const options = {
       key: data.key,
       amount: data.amount,
@@ -83,17 +85,19 @@ export default function SalonBooking() {
       },
       theme: { color: "#3399cc" },
       handler: async function (response) {
-        // Verify payment on backend
-        const verifyRes = await fetch("https://lavish-salon.onrender.com/api/payments/verify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            bookingId: data.bookingId,
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-          }),
-        });
+        const verifyRes = await fetch(
+          "https://lavish-salon.onrender.com/api/payments/verify",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              bookingId: data.bookingId,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            }),
+          }
+        );
 
         const verifyData = await verifyRes.json();
 
@@ -101,15 +105,13 @@ export default function SalonBooking() {
           alert(
             `✅ Payment Verified!\nBooking Confirmed for ${formData.name}\nService: ${formData.service}\nTime: ${formData.time}\nAmount: ₹${formData.price}\nPayment ID: ${response.razorpay_payment_id}`
           );
-redirectToHome();
-
+          redirectToHome();
         } else {
           alert("⚠️ Payment verification failed. Please contact support.");
         }
       },
     };
 
-    // open Razorpay
     const rzp = new window.Razorpay(options);
     rzp.open();
   };
@@ -128,8 +130,9 @@ redirectToHome();
   };
 
   return (
-    <section className="min-h-screen flex">
-      <div className="w-1/3 hidden md:block">
+    <section className="min-h-screen flex flex-col md:flex-row">
+      {/* Left Image Section (Hidden on Mobile) */}
+      <div className="md:w-1/2 hidden md:block">
         <img
           src={bookingimg}
           alt="Salon"
@@ -137,17 +140,18 @@ redirectToHome();
         />
       </div>
 
-      <div className="w-2/3 flex items-center justify-center  ">
+      {/* Right Form Section */}
+      <div className="md:w-1/2 w-full flex flex-col items-center justify-center relative bg-gray-50 p-6 sm:p-8">
+        {/* Close Button */}
         <button
-          className="w-10 h-10 border-2 border-gray-300 flex justify-center items-center rounded-full absolute top-4 left-1/3 mx-5 "
-          onClick={() => {
-            redirectToHome();
-          }}
+          className="absolute top-4 right-4 md:top-6 md:right-6 border border-gray-300 text-gray-600 w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-200 transition"
+          onClick={redirectToHome}
         >
-          {"X"}
+          ✕
         </button>
-        <div className="bg-white shadow-lg rounded-xl p-8 w-7/12">
-          <h2 className="text-2xl font-bold mb-6 text-center">
+
+        <div className="bg-white shadow-xl rounded-xl w-full sm:w-11/12 md:w-4/5 lg:w-3/5 p-6 sm:p-8">
+          <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
             Salon Booking Form
           </h2>
 
@@ -159,8 +163,8 @@ redirectToHome();
               placeholder="Your Name"
               onChange={handleChange}
               required
-              className="w-full p-2 border rounded-lg"
-              />
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"
+            />
             <input
               type="email"
               name="email"
@@ -168,8 +172,8 @@ redirectToHome();
               placeholder="Your Email"
               onChange={handleChange}
               required
-              className="w-full p-2 border rounded-lg"
-              />
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"
+            />
             <input
               type="tel"
               name="phone"
@@ -177,16 +181,16 @@ redirectToHome();
               placeholder="Your Phone"
               onChange={handleChange}
               required
-              className="w-full p-2 border rounded-lg"
-              />
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"
+            />
 
             <select
               name="service"
               value={formData.service}
               onChange={handleChange}
               required
-              className="w-full p-2 border rounded-lg"
-              >
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"
+            >
               <option value="">Select Service</option>
               {Object.keys(services).map((service, idx) => (
                 <option key={idx} value={service}>
@@ -201,15 +205,15 @@ redirectToHome();
               value={formData.date}
               onChange={handleChange}
               required
-              className="w-full p-2 border rounded-lg"
-              />
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"
+            />
 
             <select
               name="time"
+              value={formData.time}
               onChange={handleChange}
               required
-              value={formData.time}
-              className="w-full p-2 border rounded-lg"
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none"
             >
               <option value="">Select Time Slot</option>
               {generateTimeSlots().map((slot, idx) => (
@@ -219,26 +223,26 @@ redirectToHome();
               ))}
             </select>
 
-            <button
-              type="submit"
-              className="w-1/2 bg-stone-950 text-white py-2  rounded-lg font-semibold hover:bg-slate-700 transition"
-              disabled={formData.price === 0}
-            >
-              Book & Pay ₹{formData.price || ""}
-            </button>
+            {/* Buttons in 2 columns on larger screens, stacked on mobile */}
+            <div className="flex flex-col sm:flex-row gap-3">
               <button
-              type="button"
-              onClick={fillDemoData}
-              className="w-1/2 bg-pink-500 text-white px-4  font-semibold py-2 rounded-lg hover:bg-pink-600 transition"
-            >
-              Demo
-            </button>
+                type="submit"
+                disabled={formData.price === 0}
+                className="flex-1 bg-stone-900 text-white py-2 rounded-lg font-semibold hover:bg-stone-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                Book & Pay ₹{formData.price || ""}
+              </button>
+
+              <button
+                type="button"
+                onClick={fillDemoData}
+                className="flex-1 bg-pink-500 text-white py-2 rounded-lg font-semibold hover:bg-pink-600 transition"
+              >
+                Demo
+              </button>
+            </div>
           </form>
-       
-
         </div>
-
-
       </div>
     </section>
   );
